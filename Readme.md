@@ -46,6 +46,93 @@ devops-diplom-yandexcloud
 1. У вас есть доступ к личному кабинету на сайте регистратора.
 2. Вы зарезистрировали домен и можете им управлять (редактировать dns записи в рамках этого домена).
 
+---
+
+Есть зарегистрированное имя `ovirt.ru` у регистратора `webnames.ru`.
+
+![1](img/img001.PNG)
+
+Делегировал его `DNS` на `ns1.yandexcloud.net` и `ns2.yandexcloud.net`, т.к. буду использовать `DNS` от `YC`.
+
+```hcl
+resource "yandex_dns_zone" "diplom" {
+  name        = "my-diplom-netology-zone"
+  description = "Diplom Netology public zone"
+
+  labels = {
+    label1 = "diplom-public"
+  }
+
+  zone    = "ovirt.ru."
+  public  = true
+}
+
+resource "yandex_dns_recordset" "def" {
+  zone_id = yandex_dns_zone.diplom.id
+  name    = "@.ovirt.ru."
+  type    = "A"
+  ttl     = 200
+  data    = [yandex_vpc_address.addr.external_ipv4_address[0].address]
+}
+
+resource "yandex_dns_recordset" "gitlab" {
+  zone_id = yandex_dns_zone.diplom.id
+  name    = "gitlab.ovirt.ru."
+  type    = "A"
+  ttl     = 200
+  data    = [yandex_vpc_address.addr.external_ipv4_address[0].address]
+}
+
+resource "yandex_dns_recordset" "alertmanager" {
+  zone_id = yandex_dns_zone.diplom.id
+  name    = "alertmanager.ovirt.ru."
+  type    = "A"
+  ttl     = 200
+  data    = [yandex_vpc_address.addr.external_ipv4_address[0].address]
+}
+
+resource "yandex_dns_recordset" "grafana" {
+  zone_id = yandex_dns_zone.diplom.id
+  name    = "grafana.ovirt.ru."
+  type    = "A"
+  ttl     = 200
+  data    = [yandex_vpc_address.addr.external_ipv4_address[0].address]
+}
+
+resource "yandex_dns_recordset" "prometheus" {
+  zone_id = yandex_dns_zone.diplom.id
+  name    = "prometheus.ovirt.ru."
+  type    = "A"
+  ttl     = 200
+  data    = [yandex_vpc_address.addr.external_ipv4_address[0].address]
+}
+
+resource "yandex_dns_recordset" "www" {
+  zone_id = yandex_dns_zone.diplom.id
+  name    = "www.ovirt.ru."
+  type    = "A"
+  ttl     = 200
+  data    = [yandex_vpc_address.addr.external_ipv4_address[0].address]
+}
+```
+
+![2](img/img002.PNG)
+
+Так же буду арендовать статический ip у YC автоматически.
+
+```hcl
+resource "yandex_vpc_address" "addr" {
+  name = "ip-${terraform.workspace}"
+  external_ipv4_address {
+    zone_id = "ru-central1-a"
+  }
+}
+```
+
+![3](img/img003.PNG)
+
+---
+
 ### Создание инфраструктуры
 
 Для начала необходимо подготовить инфраструктуру в YC при помощи [Terraform](https://www.terraform.io/).
@@ -79,6 +166,104 @@ devops-diplom-yandexcloud
 2. Полученная конфигурация инфраструктуры является предварительной, поэтому в ходе дальнейшего выполнения задания возможны изменения.
 
 ---
+
+Использовал сервисны аккаунт из лабораторных работ - `my-netology`.
+
+Бекенд подготавливаю отдельным конфигом терраформа [s3](scripts/terraform/s3/), 
+а затем уже использую его в основном [stage](scripts/terraform/stage), т.к. не вышло его сразу и создать и использовать в одном конфиге.
+
+Использую один воркспейс `stage`.
+
+`VPC` в разных зонах доступности, настроена маршрутизация:
+
+```hcl
+resource "yandex_vpc_route_table" "route-table" {
+  name                    = "nat-instance-route"
+  network_id              = "${yandex_vpc_network.default.id}"
+  static_route {
+    destination_prefix    = "0.0.0.0/0"
+    next_hop_address      = var.lan_proxy_ip
+  }
+}
+
+resource "yandex_vpc_subnet" "net-101" {
+  name = "subnet-${terraform.workspace}-101"
+  zone           = "ru-central1-a"
+  network_id     = "${yandex_vpc_network.default.id}"
+  v4_cidr_blocks = ["192.168.101.0/24"]
+  route_table_id          = yandex_vpc_route_table.route-table.id
+}
+
+resource "yandex_vpc_subnet" "net-102" {
+  name = "subnet-${terraform.workspace}-102"
+  zone           = "ru-central1-b"
+  network_id     = "${yandex_vpc_network.default.id}"
+  v4_cidr_blocks = ["192.168.102.0/24"]
+  route_table_id          = yandex_vpc_route_table.route-table.id
+}
+```
+
+Конфигурации terraform [тут](scripts/terraform/), в процессе могут измениться.
+
+Сначала из каталога `s3`, для создания бакета в `YC`
+
+```bash
+export YC_TOKEN=$(yc config get token)
+terraform init
+terraform plan
+terraform apply --auto-approve
+```
+
+Далее из каталога `stage`
+
+```bash
+export YC_TOKEN=$(yc config get token)
+terraform init
+terraform workspace new stage
+terraform init
+terraform plan
+terraform apply --auto-approve
+terraform output -json > output.json
+```
+
+По итогу - создаются 7 виртуальных машин (6 - `Ubuntu 22.04`, proxy - `ubuntu 18.04 NAT Instance`).
+
+Создаются сеть и две подсети `192.168.101.0/24` и `192.168.102.0/24`.
+
+Настраиваются маршруты между ними.
+
+Арендуется белый IP.
+
+Прописываются `DNS` `YC` в соответствии с заданием.
+
+В `output.json` выводится информацию о всех выданных `ip` адресах, для дальнейшего использования с `Ansible`.
+
+Состояние воркспейса `stage` сохраняется в `S3` бакете `YC`.
+
+По завершении не забыть удалить всё, сначала в каталоге `stage` затем в `s3`.
+
+```bash
+terraform destroy --auto-approve
+```
+
+Содержимое `output.tf` вывожу в `output.json`, хочу автоматизировать заполнение хостов и шаблонов для `Ansible`. 
+
+Пока не нашел как передать системную переменную в файл с хостами `Ansible`.
+
+Как вариант:
+
+[https://900913.ru/tldr/common/en/envsubst/](https://900913.ru/tldr/common/en/envsubst/)
+
+> Replace environment variables in an input file and output to a file:
+> 
+> `envsubst < {{path/to/input_file}} > {{path/to/output_file}}`
+
+
+И потом в шаблонах (тот же конфиг `nginx`) забирать `{{ hostvars.alias.ansible_host }}`
+
+---
+
+---
 ### Установка Nginx и LetsEncrypt
 
 Необходимо разработать Ansible роль для установки Nginx и LetsEncrypt.
@@ -104,6 +289,18 @@ devops-diplom-yandexcloud
 2. Настроены все upstream для выше указанных URL, куда они сейчас ведут на этом шаге не важно, позже вы их отредактируете и укажите верные значения.
 2. В браузере можно открыть любой из этих URL и увидеть ответ сервера (502 Bad Gateway). На текущем этапе выполнение задания это нормально!
 
+---
+
+Тут использовал данные материалы:
+
+https://github.com/coopdevs/certbot_nginx
+
+https://github.com/geerlingguy/ansible-role-certbot/
+
+Работает
+
+---
+
 ___
 ### Установка кластера MySQL
 
@@ -124,6 +321,14 @@ ___
 3. В кластере автоматически создаётся пользователь `wordpress` с полными правами на базу `wordpress` и паролем `wordpress`.
 
 **Вы должны понимать, что в рамках обучения это допустимые значения, но в боевой среде использование подобных значений не приемлимо! Считается хорошей практикой использовать логины и пароли повышенного уровня сложности. В которых будут содержаться буквы верхнего и нижнего регистров, цифры, а также специальные символы!**
+
+---
+
+Пока нашел данный материал, [https://medium.com/@kelom.x/ansible-mysql-installation-2513d0f70faf](https://medium.com/@kelom.x/ansible-mysql-installation-2513d0f70faf)
+
+
+
+---
 
 ___
 ### Установка WordPress

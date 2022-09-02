@@ -1,0 +1,110 @@
+upstream app {
+    server 127.0.0.1;
+  }
+upstream gitlab {
+    server 127.0.0.1;
+  }
+upstream grafana {
+    server 127.0.0.1;
+  }
+upstream prometheus {
+    server 127.0.0.1;
+  }
+upstream alertmanager {
+    server 127.0.0.1;
+  }
+server {
+    listen 80;
+    return 301 https://$host$request_uri;
+}
+
+server {
+  listen               443 ssl;
+  server_name          {{ domain_name }} www.{{ domain_name }};
+  access_log           /var/log/nginx/{{ domain_name }}_access.log;
+  error_log            /var/log/nginx/{{ domain_name }}_error.log;
+  ssl_certificate      /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem; 
+  ssl_certificate_key  /etc/letsencrypt/live/{{ domain_name }}/privkey.pem;
+  include              /etc/letsencrypt/options-ssl-nginx.conf;
+  location / {
+    proxy_set_header   Host $http_host;
+    proxy_set_header   X-Real-IP $remote_addr;
+    proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header   X-Forwarded-Host $http_host;
+    proxy_set_header   X-Forwarded-Proto https;
+    proxy_set_header   HTTPS YES;
+    proxy_pass         http://app.{{ domain_name }}/;
+  }
+}
+
+server {
+  listen          443 ssl;
+  server_name     gitlab.{{ domain_name }};
+  access_log           /var/log/nginx/gitlab.{{ domain_name }}_access.log;
+  error_log            /var/log/nginx/gitlab.{{ domain_name }}_error.log;
+  ssl_certificate      /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem;
+  ssl_certificate_key  /etc/letsencrypt/live/{{ domain_name }}/privkey.pem;
+  include              /etc/letsencrypt/options-ssl-nginx.conf;
+  location / {
+    proxy_pass         http://gitlab.{{ domain_name }};
+    proxy_set_header   Host $http_host;
+    proxy_set_header   X-Real-IP $remote_addr;
+    proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header   X-Forwarded-Host $http_host;
+    proxy_set_header   X-Forwarded-Proto https;
+  }
+}
+
+server {
+  listen          443 ssl;
+  server_name     grafana.{{ domain_name }};
+  access_log           /var/log/nginx/grafana.{{ domain_name }}_access.log;
+  error_log            /var/log/nginx/grafana.{{ domain_name }}_error.log;
+  ssl_certificate      /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem;
+  ssl_certificate_key  /etc/letsencrypt/live/{{ domain_name }}/privkey.pem;
+  include              /etc/letsencrypt/options-ssl-nginx.conf;
+  location / {
+    proxy_pass         http://grafana.{{ domain_name }}:3000;
+    proxy_set_header   Host $http_host;
+    proxy_set_header   X-Real-IP $remote_addr;
+    proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header   X-Forwarded-Host $http_host;
+    proxy_set_header   X-Forwarded-Proto https;
+  }
+}
+
+server {
+  listen          443 ssl;
+  server_name     prometheus.{{ domain_name }};
+  access_log           /var/log/nginx/prometheus.{{ domain_name }}_access_log;
+  error_log            /var/log/nginx/prometheus.{{ domain_name }}_error_log;
+  ssl_certificate      /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem;
+  ssl_certificate_key  /etc/letsencrypt/live/{{ domain_name }}/privkey.pem;
+  include              /etc/letsencrypt/options-ssl-nginx.conf;
+  location / {
+    proxy_pass         http://prometheus.{{ domain_name }}:9090;
+    proxy_set_header   Host $http_host;
+    proxy_set_header   X-Real-IP $remote_addr;
+    proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header   X-Forwarded-Host $http_host;
+    proxy_set_header   X-Forwarded-Proto https;
+  }
+}
+
+server {
+  listen          443 ssl;
+  server_name     alertmanager.{{ domain_name }};
+  access_log           /var/log/nginx/alertmanager.{{ domain_name }}_access_log;
+  error_log            /var/log/nginx/alertmanager.{{ domain_name }}_error_log;
+  ssl_certificate      /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem;
+  ssl_certificate_key  /etc/letsencrypt/live/{{ domain_name }}/privkey.pem;
+  include              /etc/letsencrypt/options-ssl-nginx.conf;
+  location / {
+    proxy_pass         http://alertmanager.{{ domain_name }}:9093;
+    proxy_set_header   Host $http_host;
+    proxy_set_header   X-Real-IP $remote_addr;
+    proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header   X-Forwarded-Host $http_host;
+    proxy_set_header   X-Forwarded-Proto https;
+  }
+}

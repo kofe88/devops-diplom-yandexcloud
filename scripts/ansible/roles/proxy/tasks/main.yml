@@ -1,0 +1,11 @@
+- name: Update apt cache
+  apt:
+    update_cache: yes
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: latest
+  notify:
+    - nginx systemd
+
+- import_tasks: certbot.yml
