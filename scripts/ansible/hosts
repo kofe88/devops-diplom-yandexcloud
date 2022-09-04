@@ -1,27 +1,33 @@
+[proxy]
+ovirt.ru
+[proxy:vars]
+ansible_host=51.250.4.109
+
 [nginx]
-ovirt.ru  letsencrypt_email=kofe88@mail.ru domain_name=ovirt.ru
+ovirt.ru letsencrypt_email=kofe88@mail.ru domain_name=ovirt.ru
 [nginx:vars]
-ansible_host=51.250.15.168
-ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+ansible_host=51.250.4.109
+#ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
 
-[mysql_db01]
+[db01]
 db01.ovirt.ru mysql_server_id=1 mysql_replication_role=master
-[mysql_db01:vars]
-ansible_host=
-ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q user@ovirt.ru"'
+[db01:vars]
+ansible_host=192.168.102.28
+ansible_ssh_common_args='-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p -q user@ovirt.ru -o StrictHostKeyChecking=no "'
 
-[mysql_db02]
+[db02]
 db02.ovirt.ru mysql_server_id=2 mysql_replication_role=slave
-[mysql_db02:vars]
-ansible_host=
-ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q user@ovirt.ru"'
+[db02:vars]
+ansible_host=192.168.102.23
+ansible_ssh_common_args='-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p -q user@ovirt.ru -o StrictHostKeyChecking=no "'
 
 [app]
 app.ovirt.ru
 [app:vars]
-ansible_host=192.168.102.4
-ansible_ssh_common_args='-o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p -q user@ovirt.ru -o StrictHostKeyChecking=no "'
+ansible_host=192.168.102.31
+ansible_ssh_common_args='-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p -q user@ovirt.ru -o StrictHostKeyChecking=no "'
 #ssh 51.250.15.168 -o StrictHostKeyChecking=no -o ProxyCommand="ssh -W app.ovirt:22 -q user@ovirt.ru -o StrictHostKeyChecking=no "
+
 [gitlab]
 gitlab.ovirt.ru
 [gitlab:vars]

@@ -116,7 +116,7 @@ resource "yandex_dns_recordset" "www" {
 }
 ```
 
-![2](img/img002.PNG)
+
 
 Так же буду арендовать статический ip у YC автоматически.
 
@@ -129,7 +129,7 @@ resource "yandex_vpc_address" "addr" {
 }
 ```
 
-![3](img/img003.PNG)
+
 
 ---
 
@@ -299,6 +299,10 @@ https://github.com/geerlingguy/ansible-role-certbot/
 
 Работает
 
+![2](img/img002.PNG)
+
+![3](img/img003.PNG)
+
 ---
 
 ___
@@ -324,9 +328,13 @@ ___
 
 ---
 
-Пока нашел данный материал, [https://medium.com/@kelom.x/ansible-mysql-installation-2513d0f70faf](https://medium.com/@kelom.x/ansible-mysql-installation-2513d0f70faf)
+Репликация работает, что использовал:
 
+[https://medium.com/@kelom.x/ansible-mysql-installation-2513d0f70faf](https://medium.com/@kelom.x/ansible-mysql-installation-2513d0f70faf)
 
+[https://github.com/geerlingguy/ansible-role-mysql/blob/master/tasks/replication.yml](https://github.com/geerlingguy/ansible-role-mysql/blob/master/tasks/replication.yml)
+
+[https://handyhost.ru/manuals/mysql/mysql-replication.html](https://handyhost.ru/manuals/mysql/mysql-replication.html)
 
 ---
 
@@ -353,6 +361,21 @@ ___
     - `https://www.you.domain` (WordPress)
 3. На сервере `you.domain` отредактирован upstream для выше указанного URL и он смотрит на виртуальную машину на которой установлен WordPress.
 4. В браузере можно открыть URL `https://www.you.domain` и увидеть главную страницу WordPress.
+
+---
+
+`Wordpress` работает, использовал `nginx`.
+
+![3](img/img004.PNG)
+
+[https://habr.com/ru/post/223073/](https://habr.com/ru/post/223073/)
+
+[https://www.digitalocean.com/community/tutorials/how-to-use-ansible-to-install-and-set-up-wordpress-with-lamp-on-ubuntu-18-04-ru](https://www.digitalocean.com/community/tutorials/how-to-use-ansible-to-install-and-set-up-wordpress-with-lamp-on-ubuntu-18-04-ru)
+
+[https://www.techbeginner.in/2021/01/how-to-install-php-using-ansible.html](https://www.techbeginner.in/2021/01/how-to-install-php-using-ansible.html)
+
+---
+
 ---
 ### Установка Gitlab CE и Gitlab Runner
 
