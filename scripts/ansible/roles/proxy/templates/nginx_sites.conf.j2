@@ -1,17 +1,17 @@
 upstream app {
-    server 192.168.102.31:80;
+    server 192.168.102.13:80;
   }
 upstream gitlab {
-    server 127.0.0.1;
+    server 192.168.102.37:80;
   }
 upstream grafana {
-    server 127.0.0.1;
+    server 192.168.102.19:3000;
   }
 upstream prometheus {
-    server 127.0.0.1;
+    server 192.168.102.19:9090;
   }
 upstream alertmanager {
-    server 127.0.0.1;
+    server 192.168.102.19:9093;
   }
 server {
     listen 80;

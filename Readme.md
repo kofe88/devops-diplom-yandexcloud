@@ -398,6 +398,32 @@ ___
 3. На сервере `you.domain` отредактирован upstream для выше указанного URL и он смотрит на виртуальную машину на которой установлен Gitlab.
 3. При любом коммите в репозиторий с WordPress и создании тега (например, v1.0.0) происходит деплой на виртуальную машину.
 
+---
+
+Использую данную роль, немного изменив
+
+[https://github.com/geerlingguy/ansible-role-gitlab](https://github.com/geerlingguy/ansible-role-gitlab)
+
+[https://github.com/andrelohmann/ansible-role-gitlab](https://github.com/andrelohmann/ansible-role-gitlab)
+
+[https://docs.gitlab.com/ee/administration/environment_variables.html](https://docs.gitlab.com/ee/administration/environment_variables.html)
+
+Долго мучался, т.к. ставил Ubuntu 22.04, получал ошибку
+
+```bash
+TASK [gitlab : Install GitLab] ********************************************************************************************************************************************************
+fatal: [gitlab.ovirt.ru]: FAILED! => {"ansible_job_id": "129742348762.35918", "changed": false, "finished": 1, "msg": "No package matching 'gitlab-ce' is available"}
+
+PLAY RECAP ****************************************************************************************************************************************************************************
+gitlab.ovirt.ru            : ok=7    changed=1    unreachable=0    failed=1    skipped=1    rescued=0    ignored=0   
+```
+
+Рано ее еще ставить, 20.04 нужно пока что:
+
+[https://gitlab.com/gitlab-org/gitlab/-/issues/364673](https://gitlab.com/gitlab-org/gitlab/-/issues/364673)
+
+---
+
 ___
 ### Установка Prometheus, Alert Manager, Node Exporter и Grafana
 

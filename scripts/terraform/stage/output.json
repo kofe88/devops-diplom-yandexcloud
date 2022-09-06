@@ -1,0 +1,57 @@
+{
+  "internal_ip_address_db01_yandex_cloud": {
+    "sensitive": false,
+    "type": "string",
+    "value": "192.168.102.20"
+  },
+  "internal_ip_address_db02_yandex_cloud": {
+    "sensitive": false,
+    "type": "string",
+    "value": "192.168.102.7"
+  },
+  "internal_ip_address_gitlab_yandex_cloud": {
+    "sensitive": false,
+    "type": "string",
+    "value": "192.168.102.3"
+  },
+  "internal_ip_address_monitoring_yandex_cloud": {
+    "sensitive": false,
+    "type": "string",
+    "value": "192.168.102.18"
+  },
+  "internal_ip_address_proxy_lan_yandex_cloud": {
+    "sensitive": false,
+    "type": "string",
+    "value": "192.168.101.100"
+  },
+  "internal_ip_address_proxy_wanyandex_cloud": {
+    "sensitive": false,
+    "type": "string",
+    "value": "51.250.75.189"
+  },
+  "internal_ip_address_runner_yandex_cloud": {
+    "sensitive": false,
+    "type": "string",
+    "value": "192.168.102.11"
+  },
+  "internal_ip_address_wordpress_yandex_cloud": {
+    "sensitive": false,
+    "type": "string",
+    "value": "192.168.102.15"
+  },
+  "workspace": {
+    "sensitive": false,
+    "type": "string",
+    "value": "stage"
+  },
+  "yc_account_ID": {
+    "sensitive": false,
+    "type": "string",
+    "value": "ajesg66dg5r1ahte7mqd"
+  },
+  "yc_user_ID": {
+    "sensitive": false,
+    "type": "string",
+    "value": "ajemagje4ps67n2rrsn2"
+  }
+}

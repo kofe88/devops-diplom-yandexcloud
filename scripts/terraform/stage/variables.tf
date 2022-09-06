@@ -13,6 +13,11 @@ variable "ubuntu-base" {
   default = "fd8uoiksr520scs811jl"
 }
 
+# ID yc compute image list Ubuntu 20.04 LTS
+variable "ubuntu-20" {
+  default = "fd8kdq6d0p8sij7h5qe3"
+}
+
 # https://cloud.yandex.ru/marketplace/products/yc/nat-instance-ubuntu-18-04-lts
 variable "ubuntu-proxy" {
   default = "fd83slullt763d3lo57m"

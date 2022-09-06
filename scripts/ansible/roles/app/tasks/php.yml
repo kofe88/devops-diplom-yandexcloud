@@ -7,7 +7,7 @@
   loop:
     - php8.1
     - php8.1-cgi
-    - php-fpm
+    - php8.1-fpm
     - php8.1-memcache
     - php8.1-memcached
     - php8.1-mysql
@@ -15,10 +15,17 @@
     - php8.1-curl
     - php8.1-xmlrpc
 
+- name: Uninstall Apache2
+  apt:
+    name: apache2
+    state: absent
+    purge: yes
+
 - name: change listen socket
   lineinfile:
     dest: '/etc/php/8.1/fpm/pool.d/www.conf'
-    insertafter: 'listen = 127.0.0.1:9000'
+    #insertafter: 'listen = 127.0.0.1:9000'
+    regexp: '^listen = /run/php/php8.1-fpm.sock'
     line: 'listen = /var/run/php-fpm.sock'
   notify: restart php-fpm
 

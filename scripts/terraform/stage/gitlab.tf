@@ -12,7 +12,7 @@ resource "yandex_compute_instance" "gitlab" {
 
   boot_disk {
     initialize_params {
-      image_id    = "${var.ubuntu-base}"
+      image_id    = "${var.ubuntu-20}"
       type        = "network-nvme"
       size        = "40"
     }

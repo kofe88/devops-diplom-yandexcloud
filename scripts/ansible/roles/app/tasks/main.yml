@@ -11,10 +11,11 @@
     path: /etc/nginx/sites-enabled/default
     state: absent
 
-- name: Uninstall Apache2
-  apt:
-    name: apache2
+- name: Remove default site
+  file:
+    path: /etc/nginx/sites-available/default
     state: absent
-    purge: yes
+  notify:
+      - nginx restart
 
 - import_tasks: php.yml

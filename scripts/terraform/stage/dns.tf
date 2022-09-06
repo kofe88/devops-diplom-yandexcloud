@@ -8,6 +8,10 @@ resource "yandex_dns_zone" "diplom" {
 
   zone    = "ovirt.ru."
   public  = true
+
+  depends_on = [
+    yandex_vpc_subnet.net-101,yandex_vpc_subnet.net-102
+  ]
 }
 
 resource "yandex_dns_recordset" "def" {

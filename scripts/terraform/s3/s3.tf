@@ -22,7 +22,9 @@ data "yandex_iam_service_account" "my-netology" {
 
 resource "yandex_storage_bucket" "state" {
   access_key = "YCA"
-  secret_key = "YCN"
+  secret_key = "YCP"
+  # access_key pulled from $YC_STORAGE_ACCESS_KEY
+  # secret_key pulled from $YC_STORAGE_SECRET_KEY
   bucket = "my-netology-bucket"
   force_destroy = true
 }
