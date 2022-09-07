@@ -1,5 +1,5 @@
 provider "yandex" {
-  #token = "t1.9euelZrIjpmSmI_KxsrJnpfPl47Lnu3rnpWakp6YlZrLj4zJyJHNjY2Mkc3l9PdEYEVn-e9GBgaE3fT3BA9DZ_nvRgYGhA.YwSMz3WdOYld9ur_x3pFEPrXOmYcuawxG187vYiPqu3ceztYAfh824kvYV2zn0rO7AHlby0TWKvJ-F20YAWpCg"
+  #token = ""
   cloud_id  = "${var.yandex_cloud_id}"
   folder_id = "${var.yandex_folder_id}"
   zone                      = "ru-central1-a"
@@ -18,8 +18,10 @@ terraform {
   required_providers {
     yandex = {
       source = "yandex-cloud/yandex"
+      version = "= 0.78.1"
     }
   }
+  required_version = "= 1.2.8"
   backend "s3" {
     endpoint   = "storage.yandexcloud.net"
     bucket     = "my-netology-bucket"

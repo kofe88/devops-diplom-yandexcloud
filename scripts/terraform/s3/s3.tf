@@ -2,8 +2,10 @@ terraform {
   required_providers {
     yandex = {
       source = "yandex-cloud/yandex"
+      version = "= 0.78.1"
     }
   }
+  required_version = "= 1.2.8"
 }
 
 provider "yandex" {
@@ -23,8 +25,8 @@ data "yandex_iam_service_account" "my-netology" {
 resource "yandex_storage_bucket" "state" {
   access_key = "YCA"
   secret_key = "YCP"
-  # access_key pulled from $YC_STORAGE_ACCESS_KEY
-  # secret_key pulled from $YC_STORAGE_SECRET_KEY
+  # access_key  $YC_STORAGE_ACCESS_KEY
+  # secret_key  $YC_STORAGE_SECRET_KEY
   bucket = "my-netology-bucket"
   force_destroy = true
 }
