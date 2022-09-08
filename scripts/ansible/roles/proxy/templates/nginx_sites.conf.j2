@@ -1,17 +1,17 @@
 upstream app {
-    server 192.168.102.13:80;
+    server app.ovirt.ru:80;
   }
 upstream gitlab {
-    server 192.168.102.37:80;
+    server gitlab.ovirt.ru:80;
   }
 upstream grafana {
-    server 192.168.102.19:3000;
+    server monitoring.ovirt.ru:3000;
   }
 upstream prometheus {
-    server 192.168.102.19:9090;
+    server monitoring.ovirt.ru:9090;
   }
 upstream alertmanager {
-    server 192.168.102.19:9093;
+    server monitoring.ovirt.ru:9093;
   }
 server {
     listen 80;
@@ -49,7 +49,7 @@ server {
   ssl_certificate_key  /etc/letsencrypt/live/{{ domain_name }}/privkey.pem;
   include              /etc/letsencrypt/options-ssl-nginx.conf;
   location / {
-    proxy_pass         http://gitlab.{{ domain_name }};
+    proxy_pass         http://gitlab;
     proxy_set_header   Host $http_host;
     proxy_set_header   X-Real-IP $remote_addr;
     proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -67,7 +67,7 @@ server {
   ssl_certificate_key  /etc/letsencrypt/live/{{ domain_name }}/privkey.pem;
   include              /etc/letsencrypt/options-ssl-nginx.conf;
   location / {
-    proxy_pass         http://grafana.{{ domain_name }}:3000;
+    proxy_pass         http://grafana;
     proxy_set_header   Host $http_host;
     proxy_set_header   X-Real-IP $remote_addr;
     proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -85,7 +85,7 @@ server {
   ssl_certificate_key  /etc/letsencrypt/live/{{ domain_name }}/privkey.pem;
   include              /etc/letsencrypt/options-ssl-nginx.conf;
   location / {
-    proxy_pass         http://prometheus.{{ domain_name }}:9090;
+    proxy_pass         http://prometheus;
     proxy_set_header   Host $http_host;
     proxy_set_header   X-Real-IP $remote_addr;
     proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -103,7 +103,7 @@ server {
   ssl_certificate_key  /etc/letsencrypt/live/{{ domain_name }}/privkey.pem;
   include              /etc/letsencrypt/options-ssl-nginx.conf;
   location / {
-    proxy_pass         http://alertmanager.{{ domain_name }}:9093;
+    proxy_pass         http://alertmanager;
     proxy_set_header   Host $http_host;
     proxy_set_header   X-Real-IP $remote_addr;
     proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;

@@ -299,9 +299,17 @@ https://github.com/geerlingguy/ansible-role-certbot/
 
 Работает
 
-![2](img/img002.PNG)
+![5](img/img005.PNG)
 
-![3](img/img003.PNG)
+![6](img/img006.PNG)
+
+![7](img/img007.PNG)
+
+![8](img/img008.PNG)
+
+![9](img/img009.PNG)
+
+![10](img/img010.PNG)
 
 ---
 
@@ -452,6 +460,14 @@ ___
 4. В Grafana есть дашборд отображающий метрики из WordPress (*).
 
 *Примечание: дашборды со звёздочкой являются опциональными заданиями повышенной сложности их выполнение желательно, но не обязательно.*
+
+---
+
+[https://medium.com/devops4me/install-grafana-prometheus-node-exporter-using-ansible-1771e649a4b3](https://medium.com/devops4me/install-grafana-prometheus-node-exporter-using-ansible-1771e649a4b3)
+
+[https://github.com/cloudalchemy/ansible-node-exporter](https://github.com/cloudalchemy/ansible-node-exporter)
+
+---
 
 ---
 ## Что необходимо для сдачи задания?

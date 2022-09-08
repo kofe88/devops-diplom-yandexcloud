@@ -5,7 +5,6 @@ external_url "{{ gitlab_external_url }}"
 gitlab_rails['time_zone'] = "{{ gitlab_time_zone }}"
 gitlab_rails['backup_keep_time'] = {{ gitlab_backup_keep_time }}
 gitlab_rails['gitlab_email_enabled'] = {{ gitlab_email_enabled | lower }}
-gitlab_rails['initial_root_password'] = "{{ gitlab_initial_root_password }}"
 {% if gitlab_email_enabled %}
 gitlab_rails['gitlab_email_from'] = "{{ gitlab_email_from }}"
 gitlab_rails['gitlab_email_display_name'] = "{{ gitlab_email_display_name }}"
@@ -116,3 +115,25 @@ registry_nginx['ssl_certificate_key'] = "{{ gitlab_registry_nginx_ssl_certificat
 
 # To change other settings, see:
 # https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md#changing-gitlab-yml-settings
+prometheus['enable'] = false
+
+node_exporter['listen_address'] = '0.0.0.0:9100'
+gitlab_workhorse['prometheus_listen_addr'] = "0.0.0.0:9229"
+
+# Rails nodes
+gitlab_exporter['listen_address'] = '0.0.0.0'
+gitlab_exporter['listen_port'] = '9168'
+
+# Sidekiq nodes
+sidekiq['listen_address'] = '0.0.0.0'
+
+# Redis nodes
+redis_exporter['listen_address'] = '0.0.0.0:9121'
+
+# PostgreSQL nodes
+postgres_exporter['listen_address'] = '0.0.0.0:9187'
+
+# Gitaly nodes
+gitaly['prometheus_listen_addr'] = "0.0.0.0:9236"
+
+gitlab_rails['monitoring_whitelist'] = ['127.0.0.0/8', '192.168.101.0/24']

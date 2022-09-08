@@ -97,4 +97,3 @@
 # {{':'}} is to escape the colon
   shell: sudo gitlab-rails runner "user = User.where(id{{':'}} 1).first; user.password = '{{gitlab_initial_root_password}}'; user.password_confirmation = '{{gitlab_initial_root_password}}'; user.save!"
   notify: restart gitlab
-

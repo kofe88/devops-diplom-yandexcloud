@@ -30,14 +30,6 @@ output "internal_ip_address_proxy_wan_yandex_cloud" {
   value = yandex_compute_instance.proxy.network_interface.0.nat_ip_address
 }
 
-output "yc_account_ID" {
-  value = "${data.yandex_iam_service_account.my-netology.service_account_id}"
-}
-
-output "yc_user_ID" {
-  value = "${data.yandex_iam_user.kofe88.user_id}"
-}
-
 output "workspace" {
   value = "${terraform.workspace}"
 }

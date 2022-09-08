@@ -14,19 +14,19 @@ provider "yandex" {
   zone                      = "ru-central1-a"
 }
 
-data "yandex_iam_user" "kofe88" {
-  login = "fedorov.kofe88"
+data "yandex_iam_service_account" "my-netology" {
+  service_account_id = "${var.service_account_id}"
 }
 
-data "yandex_iam_service_account" "my-netology" {
-  service_account_id = "ajesg66dg5r1ahte7mqd"
+// Storage Static Access Keys
+resource "yandex_iam_service_account_static_access_key" "sa-static-key" {
+  service_account_id = "${var.service_account_id}"
+  description        = "static access key for object storage"
 }
 
 resource "yandex_storage_bucket" "state" {
-  access_key = "YCA"
-  secret_key = "YCP"
-  # access_key  $YC_STORAGE_ACCESS_KEY
-  # secret_key  $YC_STORAGE_SECRET_KEY
+  access_key = "${yandex_iam_service_account_static_access_key.sa-static-key.access_key}"
+  secret_key = "${yandex_iam_service_account_static_access_key.sa-static-key.secret_key}"
   bucket = "my-netology-bucket"
   force_destroy = true
 }
