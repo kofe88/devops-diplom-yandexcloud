@@ -26,14 +26,14 @@
 - name: Download And Unzipped Alertmanager
   unarchive:
     src: https://github.com/prometheus/alertmanager/releases/download/v{{ alertmanager_version }}/alertmanager-{{ alertmanager_version }}.linux-amd64.tar.gz
-    dest: {{ alertmanager_tmp_path }}
+    dest: "{{ alertmanager_tmp_path }}"
     creates: /tmp/alertmanager/alertmanager-{{ alertmanager_version }}.linux-amd64
     remote_src: yes
 
 - name: Copy Bin Files From Unzipped to Alertmanager
   copy:
-    src: {{ alertmanager_tmp_path }}/alertmanager-{{ alertmanager_version }}.linux-amd64/{{ item }}
-    dest: {{ alertmanager_bin_path }}/
+    src: "{{ alertmanager_tmp_path }}/alertmanager-{{ alertmanager_version }}.linux-amd64/{{ item }}"
+    dest: "{{ alertmanager_bin_path }}/"
     remote_src: yes
     mode: preserve
     owner: "{{ prometheus_user }}"
@@ -42,8 +42,8 @@
 
 - name: Copy Conf File From Unzipped to Alertmanager
   copy:
-    src: {{ alertmanager_tmp_path }}/alertmanager-{{ alertmanager_version }}.linux-amd64/alertmanager.yml
-    dest: {{ alertmanager_config_path }}/{{ alertmanager_config_file }}
+    src: "{{ alertmanager_tmp_path }}/alertmanager-{{ alertmanager_version }}.linux-amd64/alertmanager.yml"
+    dest: "{{ alertmanager_config_path }}/{{ alertmanager_config_file }}"
     remote_src: yes
     mode: preserve
     owner: "{{ prometheus_user }}"

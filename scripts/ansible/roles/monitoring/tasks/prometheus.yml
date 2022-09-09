@@ -42,7 +42,7 @@
 - name: Copy Conf Files From Unzipped to Prometheus
   copy:
     src: /tmp/prometheus/prometheus-{{ prometheus_version }}.linux-amd64/{{ item }}
-    dest: {{ prometheus_config_path }}/
+    dest: "{{ prometheus_config_dir }}/"
     remote_src: yes
     mode: preserve
     owner: "{{ prometheus_user }}"
